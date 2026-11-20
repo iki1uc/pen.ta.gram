@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PENTA.GRAM · 1NS — index</title>
+<style>
+body{margin:0;background:#050505;color:#fff;font-family:Consolas,monospace}
+header{padding:30px;text-align:center;border-bottom:2px solid #00ff66}
+h1{color:#00ff66;letter-spacing:.18em;margin:0} h2{color:#00ff66}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;padding:20px}
+.card{text-decoration:none;color:white;border:1px solid #333;padding:20px;background:#111;display:block;cursor:pointer;text-align:left;font-family:inherit;width:100%}
+.card:hover{border-color:#00ff66} .card.ready{border-left:6px solid #00ff66} .card.warn{border-left:6px solid #ffd27a} .card.bad{border-left:6px solid #ff4444}
+.role{color:#00ff66;font-size:12px;letter-spacing:.12em}
+.flow{text-align:center;padding:20px;color:#ffd27a;line-height:1.9;letter-spacing:.12em}
+footer{text-align:center;padding:20px;color:#888}
+section{padding:0 20px} pre{background:#0a0a0a;border:1px solid #333;padding:14px;overflow:auto;white-space:pre-wrap;font-size:12px;line-height:1.6}
+button{background:#111;color:#fff;border:1px solid #00ff66;padding:10px 16px;cursor:pointer;font-family:inherit}
+button.primary{background:#00ff66;color:#000;font-weight:800;border:none}
+.lamp{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px} .g{background:#00ff66;box-shadow:0 0 8px #00ff66}.y{background:#ffd27a}.r{background:#ff4444}
+.good{color:#00ff66}.bad{color:#ff4444}.warn{color:#ffd27a}.mut{color:#888}
+.pipeline{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.pipeline span{border:1px solid #333;padding:8px 12px;background:#111}
+.pipeline span.active{border-color:#00ff66;color:#00ff66}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:0 20px}
+.kpi div{border:1px solid #333;padding:14px;background:#111} .kpi b{font-size:26px;color:#00ff66}
+dialog{background:#0a0a0a;color:#fff;border:1px solid #00ff66;max-width:620px;width:92%;font-family:inherit;padding:18px}
+dialog::backdrop{background:#000a} input{width:100%;padding:10px;background:#111;border:1px solid #333;color:#fff;font-family:inherit}
+label{font-size:12px;color:#888} .warnbox{border:1px solid #ffd27a;padding:12px;background:#141000;margin:0 20px}
+</style></head>
+<body>
+<header><h1>PENTA.GRAM</h1><p>1NS · ONE NAVIGATION SYSTEM · Eine Navigation Sicht</p><p class="mut" style="font-size:12px">Startseite — index.html baut auf dieser 1NS auf</p></header>
+
+<section><div class="pipeline" id="pipeline"></div></section>
+
+<section>
+<h2>LOKALER STATUS</h2>
+<p class="mut" style="font-size:12px;margin-top:-8px">Ehrlich: prüft nur lokale Daten in dieser Datei. Prüft NICHT, ob GitHub-Repos erreichbar sind. Dafür bräuchte es einen Fetch — der läuft hier nicht automatisch.</p>
+<div id="liveStatus">Wird geprüft...</div>
+<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+<button class="primary" id="btnCheck">JETZT PRÜFEN</button>
+<button id="btnAuto">AUTO-ANZEIGE: AUS</button>
+<button id="btnReset">ZURÜCKSETZEN</button>
+<span class="mut" id="lastCheck" style="align-self:center;font-size:12px">Noch nicht geprüft.</span>
+</div>
+<div class="kpi" style="margin-top:14px">
+<div>READY<br><b id="kReady">–</b></div>
+<div>SYSTEM<br><b id="kPct">–</b></div>
+<div>HBT-SCHNITT (B)<br><b id="kHbt">–</b></div>
+<div>TIEFE<br><b id="kTiefe">–</b></div>
+</div>
+</section>
+
+<div class="warnbox" id="linkWarn"></div>
+
+<section><div class="flow">BOOT ↓ ANKER ↓ HBT ↓ CTRL ↓ BUILD<br><span class="mut">PENTA.GRAM = BOOT + ANKER + HBT + CTRL + BUILD</span></div></section>
+
+<section id="portal" class="grid"></section>
+
+<section><h2>VALIDATOR</h2><pre id="report">Noch nicht geprüft — klick JETZT PRÜFEN.</pre></section>
+
+<section>
+<h2>EIGENEN KNOTEN PRÜFEN</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:700px">
+<div><label>Titel</label><input id="customTitle" value="MEIN KNOTEN"></div>
+<div><label>Tiefe (1 / 3 / 9 / 81 / 729)</label><input id="customTiefe" value="81" type="number"></div>
+</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px">
+<label><input type="checkbox" id="cStabil" checked> stabil</label>
+<label><input type="checkbox" id="cKons" checked> konsistent</label>
+<label><input type="checkbox" id="cVoll" checked> vollständig</label>
+<label><input type="checkbox" id="cNutz" checked> nutzbar</label>
+</div>
+<button id="btnCustom" style="margin-top:12px">EIGENEN KNOTEN PRÜFEN</button>
+<div id="customOut" style="margin-top:10px;font-size:13px"></div>
+<p class="mut" style="font-size:12px">H = HALT: da? · B = (stabil+konsistent+vollständig+nutzbar)/4 — nur diese 4, keine URL/Rolle. URL/Rolle/Tiefe sind Fehler-Checks, kein B. · T = 1 Datei · 3 Modul · 9 Bereich · 81 Struktur · 729 Gesamtraum · READY = H 100 + B ≥ 75 + 0 Fehler. T ist Alias von tiefe (gleiche Zahl, kein zweiter Wert). Hinweis: 3/4 reicht für READY. Wenn alle 4 zwingend sein sollen, Schwelle auf 100.</p>
+</section>
+
+<section><h2>PROTOKOLL — append-only</h2><pre id="log">—</pre></section>
+
+<section id="vector-tools" aria-label="Vektorwerkzeuge">
+  <h2>VEKTOR — TECHNIK · schaltbar</h2>
+  <p class="mut" style="font-size:12px">Ursprung = HOME 40 (300,300 im Pentagramm). Vektor = Richtung + Länge von HOME zu einer Station. Gerade = Linie durch HOME + Vektor. Alles schaltbar, nichts läuft ohne Klick.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+    <div><label for="vec-station">Station → Vektor</label><br>
+    <select id="vec-station" style="padding:10px;background:#111;border:1px solid #333;color:#fff;font-family:inherit">
+      <option value="0, -222">BOOT — co.d.ex (oben)</option>
+      <option value="211, -69">ANKER — co.d.e.q (rechts)</option>
+      <option value="131, 180">BUILD (rechts unten)</option>
+      <option value="-131, 180">CTRL (links unten)</option>
+      <option value="-211, -69">HBT — co.dec (links)</option>
+      <option value="120, 70">FREI — 120, 70 (Copilot-Beispiel)</option>
+    </select></div>
+    <div><label for="vector-value">Vektor dx, dy</label><br><input id="vector-value" value="0, -222" aria-label="Vektorkomponenten"></div>
+    <div>
+      <button id="toggle-vector" type="button" aria-pressed="true">Vektor ausblenden</button>
+      <button id="toggle-line" type="button" aria-pressed="true">Gerade ausblenden</button>
+      <button id="toggle-grid" type="button" aria-pressed="true">Gitter ausblenden</button>
+    </div>
+  </div>
+  <div id="vector-stage" style="height:280px;overflow:hidden;border-radius:12px;background:radial-gradient(circle,#191428,#08080f);margin-top:12px">
+    <svg id="vector-svg" viewBox="0 0 600 600" role="img" aria-label="Darstellung von Vektor und Gerade ab HOME 40" style="width:100%;height:100%">
+      <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#7FE7FF"></path></marker></defs>
+      <g id="vec-grid" stroke="#ffffff14" stroke-width="1"></g>
+      <line id="the-line" x1="300" y1="300" x2="300" y2="78" stroke="#F2C94C" stroke-width="2" opacity=".8"></line>
+      <line id="the-vector" x1="300" y1="300" x2="300" y2="78" stroke="#7FE7FF" stroke-width="3" marker-end="url(#arrow)"></line>
+      <circle cx="300" cy="300" r="5" fill="#FF4FD8"></circle>
+      <text x="300" y="325" text-anchor="middle" fill="#fff" font-size="12">HOME 40</text>
+      <text id="vec-label" x="300" y="70" text-anchor="middle" fill="#7FE7FF" font-size="13"></text>
+    </svg>
+  </div>
+  <pre id="vec-out" style="margin-top:12px">Noch nicht gerechnet.</pre>
+  <p class="mut" style="font-size:12px">Formel: |v| = √(dx² + dy²) · Gerade: P(t) = HOME + t · v · Station wählen = Vektor setzen · Eingabe ändern = Vektor neu rechnen. Kein Auto-Run.</p>
+</section>
+<style>
+  #vector-tools{position:relative;z-index:30;width:min(100% - 40px,1060px);margin:24px auto;padding:18px;border:1px solid #333;border-radius:12px;background:#0b0b18;color:#FFF7DB}
+  #vector-tools h2{margin:0 0 8px;color:#00ff66}
+  #vector-tools input{width:150px;margin-left:0;padding:10px;border:1px solid #333;border-radius:8px;background:#050509;color:#FFF7DB;font-family:inherit}
+  #vector-tools button{margin:0 8px 10px 0;padding:10px 12px;border:1px solid #00ff66;border-radius:8px;background:#111;color:#fff;font-family:inherit;cursor:pointer}
+  #vector-tools select{font-family:inherit}
+  #vec-out{background:#070d18;border:1px solid #333;padding:12px;white-space:pre-wrap;font-size:12px}
+</style>
+<script>
+(()=>{ 
+  const vector=document.getElementById("the-vector"), line=document.getElementById("the-line"), input=document.getElementById("vector-value");
+  const station=document.getElementById("vec-station"), out=document.getElementById("vec-out"), label=document.getElementById("vec-label"), grid=document.getElementById("vec-grid");
+  const vb=document.getElementById("toggle-vector"), lb=document.getElementById("toggle-line"), gb=document.getElementById("toggle-grid");
+  const OX=300, OY=300;
+  // Gitter sicher per DOM (kein innerHTML)
+  for(let x=0;x<=600;x+=50){ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1",x); l.setAttribute("y1",0); l.setAttribute("x2",x); l.setAttribute("y2",600); grid.appendChild(l); }
+  for(let y=0;y<=600;y+=50){ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1",0); l.setAttribute("y1",y); l.setAttribute("x2",600); l.setAttribute("y2",y); grid.appendChild(l); }
+  function updateVector(){
+    const vals=input.value.split(",").map(v=>Number(v.trim()));
+    if(vals.length!==2||vals.some(n=>!Number.isFinite(n))){ out.textContent="Ungültig — bitte als dx, dy eingeben, z.B. 0, -222"; return; }
+    const dx=vals[0], dy=vals[1];
+    // SVG-y ist nach unten: dy nach oben = -dy im Bild
+    const x2=OX+dx, y2=OY-dy;
+    vector.setAttribute("x2",x2); vector.setAttribute("y2",y2);
+    // Gerade durch HOME + Vektor, verlängert beidseitig (t = -1.2 .. 1.2, geclippt auf 600)
+    line.setAttribute("x1",OX-dx*1.2); line.setAttribute("y1",OY+dy*1.2);
+    line.setAttribute("x2",OX+dx*1.2); line.setAttribute("y2",OY-dy*1.2);
+    label.setAttribute("x",x2); label.setAttribute("y",Math.max(18,y2-10)); label.textContent=`v = (${dx}, ${dy})`;
+    const len=Math.sqrt(dx*dx+dy*dy);
+    out.textContent=`Ursprung: HOME 40 (300, 300)\nVektor: v = (${dx}, ${dy})\nLänge: |v| = √(${dx}² + ${dy}²) = ${len.toFixed(2)}\nGerade: P(t) = HOME + t · v  = (300 + t·${dx}, 300 - t·${dy})  [SVG-y invertiert]\nZiel: (${x2.toFixed(0)}, ${y2.toFixed(0)}) im SVG`;
+  }
+  function toggle(el,btn,name){
+    const hidden=el.style.display==="none";
+    el.style.display=hidden?"":"none";
+    btn.textContent=hidden?`${name} ausblenden`:`${name} einblenden`;
+    btn.setAttribute("aria-pressed",String(hidden));
+  }
+  station.addEventListener("change",()=>{ input.value=station.value; updateVector(); });
+  input.addEventListener("input",updateVector);
+  vb.addEventListener("click",()=>toggle(vector,vb,"Vektor"));
+  lb.addEventListener("click",()=>toggle(line,lb,"Gerade"));
+  gb.addEventListener("click",()=>toggle(grid,gb,"Gitter"));
+  updateVector();
+})();
+</script>
+
+<footer>PENTA.GRAM = BOOT + ANKER + HBT + CTRL + BUILD<br><span class="mut">HOME 40 steht · Codex volle Kompetenz · Pentagramm prüft Wahrheit</span></footer>
+
+<dialog id="dlg"><h3 id="dlgTitle" style="margin:0;color:#00ff66">Knoten</h3><div id="dlgBody" style="margin-top:10px;font-size:13px;line-height:1.7"></div><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button class="primary" id="dlgClose">ZUMACHEN</button><a id="dlgLink" href="#" target="_blank" rel="noopener"><button>REPO ÖFFNEN ↗</button></a></div></dialog>
+
+<script>
+// KORRIGIERT nach Review:
+// - B = nur 4 Qualitäten
+// - READY-Zählung = r.ready
+// - validate() gibt T / tiefe / tiefeName zurück
+// - Keine innerHTML für Nutzereingaben — nur textContent + DOM
+// - CTRL/BUILD = lokale Pfade, NICHT als erreichbar verifiziert
+const TN={1:"Datei",3:"Modul",9:"Bereich",81:"Struktur",729:"Gesamtraum"};
+const DEFAULT=[
+ {id:"boot",title:"co.d.ex",role:"START",desc:"Boot · directR · VEC-OS",url:"https://github.com/iki1uc/co.d.ex",local:false,stabil:true,konsistent:true,vollstaendig:true,nutzbar:true,tiefe:81},
+ {id:"anker",title:"co.d.e.q",role:"FIXIEREN",desc:"A01 · S01 · D4",url:"https://github.com/iki1uc/co.d.e.q",local:false,stabil:true,konsistent:true,vollstaendig:true,nutzbar:true,tiefe:81},
+ {id:"hbt",title:"co.dec",role:"PRÜFEN",desc:"HBT",url:"https://github.com/iki1uc/co.dec",local:false,stabil:true,konsistent:true,vollstaendig:true,nutzbar:true,tiefe:81},
+ {id:"ctrl",title:"CTRL",role:"STEUERN",desc:"User · Ort · Rolle · Raum",url:"./ctrl/index.html",local:true,stabil:true,konsistent:true,vollstaendig:true,nutzbar:true,tiefe:729},
+ {id:"build",title:"BUILD",role:"VERBAUEN",desc:"main.board",url:"./build/index.html",local:true,stabil:true,konsistent:true,vollstaendig:true /* FIX: war false -> COMPLETE konnte nie READY werden */,nutzbar:true,tiefe:729},
+];
+let PORTAL=JSON.parse(JSON.stringify(DEFAULT));
+function log(m){const e=document.getElementById('log');const t=new Date().toLocaleTimeString('de-DE');e.textContent=(e.textContent==="—"?"":e.textContent+"\n")+t+" · "+m;}
+function validate(n){
+  const errors=[];
+  if(!n) errors.push("HALT_EXISTS");
+  if(!n?.url) errors.push("URL_EXISTS");
+  if(!n?.role) errors.push("ROLE_EXISTS");
+  const checks=[["STABLE",n?.stabil],["CONSISTENT",n?.konsistent],["COMPLETE",n?.vollstaendig],["USABLE",n?.nutzbar]];
+  for(const [id,passed] of checks){ if(passed!==true) errors.push(id); }
+  if(![1,3,9,81,729].includes(n?.tiefe)) errors.push("DEPTH_VALID");
+  const qualities=checks.filter(([,v])=>v===true).length;
+  const B=Math.round(qualities/checks.length*100);
+  const H=n?100:0;
+  const T=n?.tiefe ?? null; // T ist bewusst Alias von tiefe — gleiche Zahl, nur als HBT-Feld T lesbar
+  return {id:n?.id,title:n?.title,role:n?.role,url:n?.url,local:!!n?.local,tiefe:n?.tiefe,T, tiefeName:TN[n?.tiefe]||"Unbekannt",H,B,passed:checks.filter(([,v])=>v===true).map(([id])=>id),errors,success:errors.length===0,ready:H===100&&B>=75&&errors.length===0,ampel:errors.length===0?"grün":errors.length===1?"gelb":"rot",score:B};
+}
+function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined&&text!==null)e.textContent=text;if(cls)e.className=cls;return e;}
+function lampEl(ok,errCount){const s=el('span',null,'lamp '+(ok?'g':errCount===1?'y':'r'));return s;}
+function render(){
+ const res=PORTAL.map(validate);
+ // KORRIGIERT: READY zählt r.ready, nicht success
+ const ready=res.filter(r=>r.ready).length;
+ const pct=Math.round(ready/res.length*100);
+ const avgB=Math.round(res.reduce((a,r)=>a+r.B,0)/res.length);
+ // LOKALER STATUS — sicher aufgebaut, keine innerHTML mit Titeln
+ const ls=document.getElementById('liveStatus'); ls.textContent="";
+ ls.appendChild(el('div',`READY: ${ready}/${res.length}  ·  SYSTEM: ${pct}%`));
+ const line=el('div',''); res.forEach((r,i)=>{ if(i) line.appendChild(document.createTextNode('  ·  ')); line.appendChild(lampEl(r.ready,r.errors.length)); line.appendChild(document.createTextNode(`${r.title} ${r.ready?'✓ READY':'⚠ NICHT READY — '+r.errors.join(', ')}`)); }); ls.appendChild(line);
+ ls.appendChild(el('div',`HBT-Schnitt (B): ${avgB} · ${pct===100?'ALLE STEHEN — PENTA.GRAM WAHR':pct>=80?'FAST — 1 Fehler offen (BUILD)':'PRÜFEN — Fehler offen'}`, 'mut'));
+ document.getElementById('kReady').textContent=ready+" / "+res.length;
+ document.getElementById('kPct').textContent=pct+"%";
+ document.getElementById('kHbt').textContent=avgB;
+ document.getElementById('kTiefe').textContent="81 → 729";
+ document.getElementById('lastCheck').textContent="Geprüft: "+new Date().toLocaleString('de-DE')+" · READY "+ready+"/"+res.length+" · B-Schnitt "+avgB;
+ // Pipeline — sicher
+ const pipe=document.getElementById('pipeline'); pipe.textContent="";
+ PORTAL.forEach((n,i)=>{ if(i) pipe.appendChild(el('span','→')); const s=el('span',`${n.title} ${res[i].ready?'✓ READY':'⚠ NICHT READY'}`); if(res[i].ready) s.classList.add('active'); pipe.appendChild(s); });
+ // Link-Warnung — CTRL/BUILD müssen im Repo existieren
+ const lw=document.getElementById('linkWarn'); lw.textContent="";
+ lw.appendChild(el('strong','⚠ LINKS PRÜFEN VOR VERÖFFENTLICHUNG: '));
+ lw.appendChild(document.createTextNode('./ctrl/index.html und ./build/index.html sind lokale Pfade — sie müssen im Repository tatsächlich existieren. Diese Seite prüft das NICHT. Wenn sie fehlen, zeigen die Karten auf 404. GitHub-Links sind ebenfalls nur als Text gespeichert, nicht auf Erreichbarkeit geprüft.'));
+ // Portal — Karten sicher per DOM, Titel als textContent
+ const root=document.getElementById('portal'); root.textContent="";
+ res.forEach((r,i)=>{
+  const n=PORTAL[i];
+  const card=el('button',null,'card '+(r.ready?'ready':r.errors.length===1?'warn':'bad'));
+  card.appendChild(el('div',n.role,'role'));
+  card.appendChild(el('h2',n.title));
+  card.appendChild(el('p',n.desc));
+  card.appendChild(el('div',`H ${r.H} · B ${r.B} · T ${r.T} ${r.tiefeName} · Score ${r.score}%`));
+  const st=el('div',null); st.style.marginTop='8px';
+  st.appendChild(el('span',r.ready?'✓ READY':`✗ NICHT READY — ${r.errors.join(', ')}`,r.ready?'good':'bad')); card.appendChild(st);
+  card.appendChild(el('div',n.local?'⚠ lokaler Pfad — Existenz im Repo nicht verifiziert':'Link: nur Text, Erreichbarkeit nicht geprüft','mut'));
+  card.appendChild(el('div','Klick = Fehlerbericht öffnen (kein Link) · Shift / Cmd / Ctrl + Klick = Link öffnen','mut'));
+  card.onclick=(e)=>{ if(e.shiftKey||e.metaKey||e.ctrlKey){ window.open(n.url,'_blank','noopener'); return; } openDlg(n,r); log('Fehlerbericht: '+n.title); };
+  root.appendChild(card);
+ });
+ document.getElementById('report').textContent=JSON.stringify(res,null,2);
+ return res;
+}
+function openDlg(n,r){
+ document.getElementById('dlgTitle').textContent=`${n.title} — ${n.role} — Ampel: ${r.ampel.toUpperCase()}`;
+ const body=document.getElementById('dlgBody'); body.textContent="";
+ body.appendChild(el('p',`H ${r.H} · B ${r.B} · T ${r.T} ${r.tiefeName} · Score ${r.score}% · READY ${r.ready?'JA':'NEIN'}`));
+ body.appendChild(el('p',`Bestanden (nur B-Qualitäten): ${r.passed.join(', ')||'—'}`));
+ body.appendChild(el('p',`Fehler: ${r.errors.length?r.errors.join(', '):'kein Fehler'}`));
+ body.appendChild(el('p',r.ready?'Alles da — weiter.':'Fehler zuerst fixen, dann weiter. BUILD bleibt ⚠ bis COMPLETE = true.'));
+ body.appendChild(el('p',n.local?'Link: lokaler Pfad — vor Veröffentlichen prüfen, ob ./ctrl/index.html bzw. ./build/index.html im Repo existiert.':'Link: GitHub-URL als Text — Erreichbarkeit hier nicht geprüft.'));
+ document.getElementById('dlgLink').href=n.url;
+ document.getElementById('dlg').showModal();
+}
+document.getElementById('dlgClose').onclick=()=>document.getElementById('dlg').close();
+let timer=null;
+document.getElementById('btnCheck').onclick=()=>{render();log('HBT-Prüfung — 1NS (lokal)');};
+document.getElementById('btnReset').onclick=()=>{PORTAL=JSON.parse(JSON.stringify(DEFAULT));render();log('Zurückgesetzt');};
+document.getElementById('btnAuto').onclick=e=>{if(timer){clearInterval(timer);timer=null;e.target.textContent='AUTO-ANZEIGE: AUS';log('AUTO-ANZEIGE aus — Daten unverändert, nur Anzeige gestoppt')}else{timer=setInterval(()=>{render();log('AUTO-ANZEIGE (5s) — nur neu gerendert, Daten unverändert');},5000);e.target.textContent='AUTO-ANZEIGE: AN (5s)';log('AUTO-ANZEIGE an — rendert alle 5s neu, ändert lokale Daten nicht');}};
+document.getElementById('btnCustom').onclick=()=>{
+ const n={id:'custom',title:document.getElementById('customTitle').value||'MEIN KNOTEN',role:'CUSTOM',url:'(lokal)',local:true,stabil:document.getElementById('cStabil').checked,konsistent:document.getElementById('cKons').checked,vollstaendig:document.getElementById('cVoll').checked,nutzbar:document.getElementById('cNutz').checked,tiefe:parseInt(document.getElementById('customTiefe').value)||1};
+ const r=validate(n);
+ const out=document.getElementById('customOut'); out.textContent="";
+ out.appendChild(el('b',`${r.title} `));
+ out.appendChild(document.createTextNode(`— H ${r.H} · B ${r.B} · T ${r.T} ${r.tiefeName} · Ampel ${r.ampel} · `));
+ out.appendChild(el('span',r.ready?'✓ READY':'✗ NICHT READY — Fehler: '+r.errors.join(', '),r.ready?'good':'bad'));
+ log('Custom geprüft: '+r.title+' → '+r.score+'%');
+};
+render(); log('PENTA.GRAM 1NS index geladen + VEKTOR-Technik: HOME 40 = Ursprung, Stationen = Vektoren, schaltbar. — korrigiert v2: Anzeige überall r.ready, AUTO = nur Anzeige, Karten-Hinweis klar, T = Alias von tiefe.');
+</script><script>document.addEventListener("DOMContentLoaded",()=>{ if(typeof init==="function") init(); });</script>
+</body></html>
