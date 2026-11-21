@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PENTA.GRAM · 1NS · v1.0 FINAL</title>
+<style>
+:root{--bg:#050505;--card:#111;--line:#333;--green:#00ff66;--yellow:#ffd166;--red:#ff5555;--text:#f5f5f5;--blue:#6cf}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Consolas,monospace}
+header{padding:20px;text-align:center;border-bottom:2px solid var(--green)} main{max-width:1200px;margin:auto;padding:20px}
+.navbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.navbar a,button{text-decoration:none;color:#fff;background:#111;border:1px solid #333;padding:10px 14px;cursor:pointer;font-family:inherit}
+.navbar a:hover,button:hover{border-color:var(--green)} .navbar a.active{background:var(--green);color:#000;border-color:var(--green);font-weight:bold}
+.card{background:#111;border:1px solid #333;padding:18px;border-radius:12px;transition:.2s}.card:hover{transform:translateY(-2px);border-color:var(--green)}
+.card.ready{border-left:6px solid var(--green)} .card.warn{border-left:6px solid var(--yellow)} .card.error{border-left:6px solid var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+.footer{margin-top:30px;color:#777;text-align:center}
+a:focus-visible,button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px;border-radius:6px}
+input:focus-visible{outline:3px solid var(--blue)} input{background:#000;color:#fff;border:1px solid #333;padding:10px;border-radius:6px;font-family:inherit;width:100%}
+.nav-toggle{display:none;background:#111;color:#fff;border:1px solid #333;padding:10px;width:100%;margin-bottom:10px}
+@media(max-width:768px){.nav-toggle{display:block}.navbar{display:none;flex-direction:column;width:100%}.navbar.open{display:flex}.navbar a{width:100%}}
+.zoombar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}.zoombar input[type=range]{width:180px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tabs button.on{background:var(--green);color:#000;border-color:var(--green);font-weight:bold}.tabview{display:none}.tabview.on{display:block}.codebox{background:#000;border:1px solid #333;border-radius:10px;padding:14px;overflow:auto;max-height:420px;white-space:pre-wrap;font-size:14px;line-height:1.6;transform-origin:top left}.view{display:none}.view.on{display:block}.muted{color:#888;font-size:13px}.ok{color:var(--green)} .warn{color:var(--yellow)}
+</style></head><body>
+<header><h1>PENTA.GRAM</h1><p>1NS · BOOT → ID → HBT → PULSE · SAM spricht · OUR prüft · GPU hält</p></header>
+<main>
+<button id="navToggle" class="nav-toggle" aria-label="Navigation öffnen" aria-expanded="false">☰ Menü</button>
+<nav id="nav" class="navbar" aria-label="Hauptnavigation / Portal Navigation"></nav>
+<div id="liveStatus" aria-live="polite" aria-label="Live Systemstatus" class="muted">LIVE: Bereit. Wähle eine Station.</div>
+
+
+<div class="card" style="margin-top:14px"><h2>ZOOM-BLICK · CODE / KI TABS</h2>
+<p class="muted">Kein kleiner Blick mehr. Zoom rein, Tab wechseln, Code lesen. SAM spricht, OUR prüft, GPU hält.</p>
+<div class="tabs" role="tablist" aria-label="Code KI Tabs">
+<button role="tab" aria-selected="true" class="on" onclick="showTab('code',this)">CODE · sam.raw.js</button>
+<button role="tab" aria-selected="false" onclick="showTab('ki',this)">KI · SAM SPEAK OUR</button>
+<button role="tab" aria-selected="false" onclick="showTab('gpu',this)">GPU · ZEICHNEN</button>
+<button role="tab" aria-selected="false" onclick="showTab('vector',this)">VECTOR · GERADEN</button>
+</div>
+<div class="zoombar"><button onclick="zoomBy(-0.25)">− Zoom</button><button onclick="zoomBy(0.25)">+ Zoom</button><button onclick="setZoom(1)">100% Reset</button><input id="zoomRange" type="range" min="0.5" max="2.5" step="0.05" value="1" oninput="setZoom(parseFloat(this.value))"><span id="zoomLabel">Zoom 100%</span><button onclick="toggleZoomFull()">⛶ Vollbild-Blick</button></div>
+<div id="zoomWrap">
+<div id="tab-code" class="tabview on"><pre id="codeBox" class="codebox">// sam.raw.js — RAW
+// SAM sagt:  ZIEL + RICHTUNG + SCHRITT
+// OUR sagt:  VERSTANDEN + GEPRÜFT + BEREIT
+// GPU macht: ZEICHNEN + RECHNEN + HALTEN
+const SAM = { say:(ziel,richtung,schritt)=>{
+  if(!ziel||!richtung||schritt===undefined) throw new Error("SAM braucht ZIEL + RICHTUNG + SCHRITT");
+  return {ziel,richtung,schritt, von:"SAM", an:"OUR"};
+}};
+const OUR = { pruefen:(s)=>/^[1-9]-[1-9]-[1-9]$/.test(s.ziel) && ["X","Y","Z","45","90"].includes(String(s.richtung)) && Number.isInteger(s.schritt) };
+function schritt(ziel,richtung,schrittWeite){
+  const satz = SAM.say(ziel,richtung,schrittWeite);
+  const ok = OUR.pruefen(satz);
+  return ok ? "VERSTANDEN + GEPRÜFT + BEREIT — GPU: ZEICHNEN + RECHNEN + HALTEN" : "NICHT BEREIT — erneut prüfen";
+}
+// Test im Kopf: schritt("5-5-5","Z",81)</pre></div>
+<div id="tab-ki" class="tabview"><pre class="codebox">KI · SAM SPEAK OUR
+SAM: "Gehe 5-5-1, Gerade Z, Schritt +81, bis 5-5-5."
+OUR: "Verstanden. Adresse 1-9 geprüft. Richtung Z geprüft. Schritt 81 geprüft. Bereit."
+GPU: "Zeichne Gerade. Rechne Position. Halte Ziel."
+HALT = ZIEL
+
+Regel:
+- SAM spricht nur ZIEL + RICHTUNG + SCHRITT
+- OUR prüft alles, bevor GPU etwas macht
+- GPU zeichnet nie, was OUR nicht freigegeben hat</pre></div>
+<div id="tab-gpu" class="tabview"><pre class="codebox">GPU · ZEICHNEN + RECHNEN + HALTEN
+drawVector(vec)    → Mitte → Mitte + vec, Linie + Punkt
+drawMini()         → 9×9 Raster, aktive Zelle grün
+drawNetwork()      → Kanten als Geraden, Knoten als Punkte
+drawCorridors(cell)→ X rot, Y grün, Z blau, 45° orange, 90° cyan
+slide.vector       → omni × diamant × GEO × circle × energie × ∞
+                   → alle Vektoren gleichzeitig</pre></div>
+<div id="tab-vector" class="tabview"><pre class="codebox">VECTOR · GERADEN
+PC = (1,0,0) Kern / Schub
+PQ = (0,1,0) Frage / Beugung
+PX = (0,0,1) Erweiterung / unbedingt dazu
+PV = PC + PQ + PX = (1,1,1)
+META(AB) = A + B + Tiefe darüber
+
+PENTA.GRAM:
+Center 41 = Anker (prim)
+Außen 1 · 3 · 6 · 9 · 27 — nur 3 prim, 9 + 27 sind 9e
+Geraden: p1 → p3 → p5 → p2 → p4 → p1</pre></div>
+</div>
+<p class="muted">Zoom geht auch mit: <b>Ctrl + + / Ctrl + −</b> · <b>Ctrl + 0</b> = Reset · <b>1–4</b> = Stationen (wenn kein Input fokussiert). Auf Touch: Pinch im Browser + Buttons.</p>
+</div>
+
+<!-- INDEX / HOME -->
+<section id="view-index" class="view on" aria-label="Startseite">
+<div class="card ready"><h2>1NS</h2><p>BOOT → ID → HBT → PULSE</p><p class="muted">SAM sagt: ZIEL + RICHTUNG + SCHRITT · OUR sagt: VERSTANDEN + GEPRÜFT + BEREIT · GPU macht: ZEICHNEN + RECHNEN + HALTEN</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button onclick="go('boot')">01 BOOT</button><button onclick="go('id')">02 ID</button><button onclick="go('hbt')">03 HBT</button><button onclick="go('pulse')">04 PULSE</button></div></div>
+<div class="grid" style="margin-top:15px">
+<a class="card" href="#" onclick="go('boot');return false" aria-label="Öffne BOOT Modul"><h3>01 BOOT</h3><p>Start · Routing · Einstieg · Navigation</p></a>
+<a class="card" href="#" onclick="go('id');return false" aria-label="Öffne ID Modul"><h3>02 ID</h3><p>User · Ort · Status</p></a>
+<a class="card" href="#" onclick="go('hbt');return false" aria-label="Öffne HBT Modul"><h3>03 HBT</h3><p>HALT · BEWERTUNG · TIEFE · VECTOR · NETZWERK</p></a>
+<a class="card" href="#" onclick="go('pulse');return false" aria-label="Öffne PULSE Modul"><h3>04 PULSE</h3><p>Historie · Bindung · READY</p></a>
+</div>
+</section>
+
+<!-- BOOT -->
+<section id="view-boot" class="view" aria-label="BOOT"><button onclick="go('index')">← Zurück</button>
+<div class="card ready" style="margin-top:12px"><h2>01 BOOT</h2><p>Start · Navigation · Routing</p><p class="muted">BOOT = Einstieg. Kein Löschen, nur Anhängen. HALT = ZIEL.</p><div id="pager-boot"></div><a href="#" onclick="go('id');return false">Weiter → ID</a></div></section>
+
+<!-- ID -->
+<section id="view-id" class="view" aria-label="ID"><button onclick="go('boot')">← Zurück</button>
+<div class="card ready" style="margin-top:12px"><h2>02 IDENTITÄT</h2><p>User · Ort · Status</p>
+<label>OUR-Name <input id="ourName" placeholder="z.B. OUR / wieimmer" value=""></label><br><br>
+<label>Ort <input id="ourOrt" placeholder="z.B. Palais / 5-5-5" value=""></label><br><br>
+<button onclick="saveID()">ID speichern (lokal)</button><p id="idOut" class="muted">Noch keine ID gespeichert.</p>
+<div id="pager-id"></div><a href="#" onclick="go('hbt');return false">Weiter → HBT</a></div></section>
+
+<!-- HBT -->
+<section id="view-hbt" class="view" aria-label="HBT"><button onclick="go('id')">← Zurück</button>
+<div class="card ready" style="margin-top:12px"><h2>03 HBT</h2>
+<div id="hbtOut">HALT 100%<br>BEWERTUNG 100%<br>TIEFE 81<br>VECTOR JA<br>NETZWERK 0<br>STATUS READY</div>
+<label style="margin-top:12px;display:block">BEWERTUNG (0–100) <input id="bewertung" type="number" min="0" max="100" value="100"></label>
+<label style="margin-top:8px;display:block">TIEFE <input id="tiefe" type="number" min="0" max="729" value="81"></label>
+<button style="margin-top:10px" onclick="checkHBT()">HBT prüfen</button><pre id="report" aria-label="Validierungsbericht" style="white-space:pre-wrap"></pre>
+<div id="pager-hbt"></div><a href="#" onclick="go('pulse');return false">Weiter → PULSE</a></div></section>
+
+<!-- PULSE -->
+<section id="view-pulse" class="view" aria-label="PULSE"><button onclick="go('hbt')">← Zurück</button>
+<div class="card ready" style="margin-top:12px"><h2>04 PULSE</h2><p>Historie<br>Bindung<br>READY</p><pre id="pulseLog" style="white-space:pre-wrap">PULSE-LOG startet hier. Jeder Schritt hängt an, nichts wird gelöscht.</pre><button onclick="pulse()">+ PULSE schlagen</button> <button onclick="go('index')">Zur Startseite</button></div></section>
+
+<div class="footer">PENTA.GRAM v1.0 FINAL · 1 Datei, kein Modul-Import, kein CDN · READY FOR GITHUB PAGES · ALT bleibt, NEU dazu</div>
+</main>
+<script>
+// KEIN import. Alles inline, damit die Vorschau nicht "CdnAliasUnresolved" wirft.
+// NAV = BOOT, ID, HBT, PULSE + HOME
+const NAV=[{id:"index",title:"HOME",file:"index"},{id:"boot",title:"BOOT",file:"01.boot"},{id:"id",title:"ID",file:"02.id"},{id:"hbt",title:"HBT",file:"03.hbt"},{id:"pulse",title:"PULSE",file:"04.pulse"}];
+const PAGES=["index","boot","id","hbt","pulse"];
+let current="index", pulseCount=0, logs=["[BOOT] PENTA.GRAM v1.0 FINAL geladen"];
+function renderNav(){document.getElementById("nav").innerHTML=NAV.map(n=>`<a href="#" onclick="go('${n.id}');return false" class="${current===n.id?"active":""}" aria-current="${current===n.id?"page":"false"}">${n.title}</a>`).join("");}
+function renderPager(){["boot","id","hbt"].forEach(id=>{const el=document.getElementById("pager-"+id); if(!el)return; const idx=PAGES.indexOf(id); el.innerHTML=(idx>0?`<a href="#" onclick="go('${PAGES[idx-1]}');return false">← Zurück</a> `:"")+(idx<PAGES.length-1?`<a href="#" onclick="go('${PAGES[idx+1]}');return false">Weiter →</a>`:"");});}
+function go(id){current=id; document.querySelectorAll(".view").forEach(v=>v.classList.remove("on")); document.getElementById("view-"+id).classList.add("on"); renderNav(); renderPager(); document.getElementById("liveStatus").textContent="LIVE: Station "+id.toUpperCase()+" aktiv. HALT = ZIEL."; logs.push("["+new Date().toLocaleTimeString("de-DE")+"] Gehe zu "+id.toUpperCase()); document.getElementById("pulseLog").textContent=logs.join("\n"); const nav=document.getElementById("nav"); nav.classList.remove("open"); document.getElementById("navToggle").setAttribute("aria-expanded","false");}
+function saveID(){const n=document.getElementById("ourName").value||"OUR"; const o=document.getElementById("ourOrt").value||"5-5-5"; localStorage.setItem("pentagram-id",JSON.stringify({name:n,ort:o})); document.getElementById("idOut").textContent="Gespeichert: "+n+" · Ort "+o+" · lokal, nichts wird gesendet."; logs.push("ID gespeichert: "+n+" @ "+o);}
+function checkHBT(){const b=+document.getElementById("bewertung").value||0; const t=+document.getElementById("tiefe").value||0; const halt=true; const ready=halt&&b>=75&&t>0; document.getElementById("hbtOut").innerHTML=`HALT 100%<br>BEWERTUNG ${b}%<br>TIEFE ${t}<br>VECTOR JA<br>STATUS ${ready?"<span class=ok>READY</span>":"<span class=warn>WARN</span>"}`; document.getElementById("report").textContent=ready?"VALIDATOR: ✓ HALT ✓ BEWERTUNG ≥75 ✓ TIEFE gültig → READY":"VALIDATOR: ✗ BEWERTUNG muss ≥75 sein oder TIEFE >0 → WARN. Kein Löschen, nur Prüfen."; logs.push("HBT geprüft: B="+b+" T="+t+" → "+(ready?"READY":"WARN"));}
+function pulse(){pulseCount++; logs.push("["+new Date().toLocaleTimeString("de-DE")+"] PULSE "+pulseCount+" — Historie hängt an"); document.getElementById("pulseLog").textContent=logs.join("\n");}
+
+let zoomLevel=1;
+function applyZoom(){document.getElementById("zoomWrap").style.transform="scale("+zoomLevel+")"; document.getElementById("zoomWrap").style.transformOrigin="top left"; document.getElementById("zoomLabel").textContent="Zoom "+Math.round(zoomLevel*100)+"%"; const r=document.getElementById("zoomRange"); if(r) r.value=zoomLevel;}
+function zoomBy(d){zoomLevel=Math.max(0.5,Math.min(2.5,zoomLevel+d)); applyZoom();}
+function setZoom(v){zoomLevel=Math.max(0.5,Math.min(2.5,v)); applyZoom();}
+function toggleZoomFull(){const w=document.getElementById("zoomWrap"); if(document.fullscreenElement){document.exitFullscreen();} else if(w.requestFullscreen){w.requestFullscreen();}}
+function showTab(name,btn){document.querySelectorAll(".tabview").forEach(t=>t.classList.remove("on")); document.getElementById("tab-"+name).classList.add("on"); document.querySelectorAll(".tabs button").forEach(b=>{b.classList.remove("on"); b.setAttribute("aria-selected","false");}); if(btn){btn.classList.add("on"); btn.setAttribute("aria-selected","true");}}
+
+// SAM RAW inline — SAM sagt ZIEL+RICHTUNG+SCHRITT, OUR prüft, GPU hält
+const SAM={say:(ziel,richtung,schritt)=>{if(!ziel||!richtung||schritt===undefined)throw new Error("SAM braucht ZIEL + RICHTUNG + SCHRITT"); return {ziel,richtung,schritt};}};
+const OUR={pruefen:(s)=>/^[1-9]-[1-9]-[1-9]$/.test(s.ziel)&&["X","Y","Z","45","90"].includes(String(s.richtung))&&Number.isInteger(s.schritt)};
+function samSchritt(z,r,s){const satz=SAM.say(z,r,s); return OUR.pruefen(satz)?"VERSTANDEN + GEPRÜFT + BEREIT — GPU: ZEICHNEN + RECHNEN + HALTEN":"NICHT BEREIT";}
+// Mobile Nav
+const toggle=document.getElementById("navToggle"), nav=document.getElementById("nav");
+toggle.addEventListener("click",()=>{const open=nav.classList.toggle("open"); toggle.setAttribute("aria-expanded",open);});
+// Tastatur: 1=BOOT 2=ID 3=HBT 4=PULSE, ← →, H=HOME, M=Menü, ESC=Menü zu
+document.addEventListener("keydown",e=>{if(e.target.matches("input,textarea"))return; const map={"1":"boot","2":"id","3":"hbt","4":"pulse"}; if(map[e.key]){go(map[e.key]);return;} if(e.key==="ArrowRight"){const i=PAGES.indexOf(current); if(i<PAGES.length-1)go(PAGES[i+1]);} if(e.key==="ArrowLeft"){const i=PAGES.indexOf(current); if(i>0)go(PAGES[i-1]);} if(e.key==="h"||e.key==="H")go("index"); if(e.key==="m"||e.key==="M"){nav.classList.add("open"); toggle.setAttribute("aria-expanded","true");} if(e.key==="Escape"){nav.classList.remove("open"); toggle.setAttribute("aria-expanded","false");}});
+// ID wiederherstellen
+try{const s=JSON.parse(localStorage.getItem("pentagram-id")||"null"); if(s){document.getElementById("ourName").value=s.name; document.getElementById("ourOrt").value=s.ort; document.getElementById("idOut").textContent="Geladen: "+s.name+" · Ort "+s.ort;}}catch(e){}
+renderNav(); renderPager(); checkHBT(); applyZoom();
+document.addEventListener("keydown",e=>{if(!e.ctrlKey&&!e.metaKey)return; if(e.key==="+"||e.key==="="){e.preventDefault(); zoomBy(0.25);} if(e.key==="-"){e.preventDefault(); zoomBy(-0.25);} if(e.key==="0"){e.preventDefault(); setZoom(1);}});
+</script></body></html>
